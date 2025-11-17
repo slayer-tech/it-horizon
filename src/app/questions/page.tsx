@@ -1,3 +1,6 @@
+
+'use client';
+
 import Link from "next/link";
 import { Suspense } from "react";
 import {
@@ -15,14 +18,18 @@ import { getQuestions } from "@/lib/data.tsx";
 import { PaginationControls } from "@/components/pagination-controls";
 import { QuestionCard } from "@/components/question-card";
 import { Button } from "@/components/ui/button";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function QuestionsPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const page = Number(searchParams.page ?? '1');
-  const sort = (searchParams.sort ?? 'newest') as 'newest' | 'popular';
+export default function QuestionsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get('page') ?? '1');
+  const sort = (searchParams.get('sort') ?? 'newest') as 'newest' | 'popular';
+  
+  const handleSortChange = (value: string) => {
+    router.push(`/questions?sort=${value}`);
+  };
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -34,17 +41,13 @@ export default function QuestionsPage({
       </div>
       
       <div className="flex justify-end mb-6">
-        <Select defaultValue={sort}>
+        <Select value={sort} onValueChange={handleSortChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Сортировка" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="newest" asChild>
-              <Link href={`/questions?sort=newest`}>Сначала новые</Link>
-            </SelectItem>
-            <SelectItem value="popular" asChild>
-              <Link href={`/questions?sort=popular`}>Сначала популярные</Link>
-            </SelectItem>
+            <SelectItem value="newest">Сначала новые</SelectItem>
+            <SelectItem value="popular">Сначала популярные</SelectItem>
           </SelectContent>
         </Select>
       </div>

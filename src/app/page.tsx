@@ -1,3 +1,6 @@
+
+'use client';
+
 import {
   Card,
   CardContent,
@@ -20,6 +23,7 @@ import { getPosts, type PostTopic } from "@/lib/data.tsx";
 import { PaginationControls } from "@/components/pagination-controls";
 import Link from "next/link";
 import { Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const TOPICS: { name: string, value: PostTopic | 'all' }[] = [
   { name: 'Все', value: 'all' },
@@ -29,21 +33,24 @@ const TOPICS: { name: string, value: PostTopic | 'all' }[] = [
   { name: 'Карьера', value: 'career' },
 ];
 
-export default function HomePage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const page = Number(searchParams.page ?? '1');
-  const topic = (searchParams.topic ?? 'all') as PostTopic | 'all';
-  const sort = (searchParams.sort ?? 'newest') as 'newest' | 'popular';
+export default function HomePage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get('page') ?? '1');
+  const topic = (searchParams.get('topic') ?? 'all') as PostTopic | 'all';
+  const sort = (searchParams.get('sort') ?? 'newest') as 'newest' | 'popular';
+
+  const handleSortChange = (value: string) => {
+    router.push(`/?topic=${topic}&sort=${value}`);
+  };
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-8">
         Статьи
       </h1>
-      <Tabs defaultValue={topic} className="w-full">
+      <Tabs value={topic} className="w-full">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <TabsList>
             {TOPICS.map((t) => (
@@ -53,17 +60,13 @@ export default function HomePage({
             ))}
           </TabsList>
 
-          <Select defaultValue={sort}>
+          <Select value={sort} onValueChange={handleSortChange}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Сортировка" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest" asChild>
-                <Link href={`/?topic=${topic}&sort=newest`}>Сначала новые</Link>
-              </SelectItem>
-              <SelectItem value="popular" asChild>
-                <Link href={`/?topic=${topic}&sort=popular`}>Сначала популярные</Link>
-              </SelectItem>
+              <SelectItem value="newest">Сначала новые</SelectItem>
+              <SelectItem value="popular">Сначала популярные</SelectItem>
             </SelectContent>
           </Select>
         </div>
