@@ -24,6 +24,7 @@ import { PaginationControls } from "@/components/pagination-controls";
 import Link from "next/link";
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const TOPICS: { name: string, value: PostTopic | 'all' }[] = [
   { name: 'Все', value: 'all' },
@@ -45,23 +46,30 @@ export default function HomePage() {
     router.push(`/?topic=${topic}&sort=${value}`);
   };
 
+  const handleTopicChange = (value: string) => {
+    router.push(`/?topic=${value}&sort=${sort}`);
+  };
+
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-8">
         Статьи
       </h1>
-      <Tabs value={topic} className="w-full">
+      <Tabs value={topic} onValueChange={handleTopicChange} className="w-full">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-          <TabsList>
-            {TOPICS.map((t) => (
-              <TabsTrigger value={t.value} key={t.value} asChild>
-                <Link href={`/?topic=${t.value}&sort=${sort}`}>{t.name}</Link>
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <ScrollArea className="w-full sm:w-auto">
+            <TabsList>
+              {TOPICS.map((t) => (
+                <TabsTrigger value={t.value} key={t.value}>
+                  {t.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
 
           <Select value={sort} onValueChange={handleSortChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Сортировка" />
             </SelectTrigger>
             <SelectContent>
