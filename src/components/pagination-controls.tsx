@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/pagination';
 import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
 
 export function PaginationControls({
   currentPage,
@@ -78,7 +80,8 @@ export function PaginationControls({
               className={currentPage <= 1 ? "pointer-events-none opacity-50" : undefined}
             >
               <Link href={createPageURL(currentPage - 1)}>
-                <span className="sr-only">Previous</span>
+                <ChevronLeft className="h-4 w-4" />
+                <span>Previous</span>
               </Link>
             </PaginationPrevious>
           </PaginationItem>
@@ -105,7 +108,8 @@ export function PaginationControls({
                className={currentPage >= totalPages ? "pointer-events-none opacity-50" : undefined}
             >
               <Link href={createPageURL(currentPage + 1)}>
-                  <span className="sr-only">Next</span>
+                <span>Next</span>
+                <ChevronRight className="h-4 w-4" />
               </Link>
             </PaginationNext>
           </PaginationItem>

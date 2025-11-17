@@ -1,12 +1,10 @@
 
 'use client';
 import * as React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { Slot } from '@radix-ui/react-slot';
+import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Button, ButtonProps, buttonVariants } from '@/components/ui/button';
+import { Button, ButtonProps } from '@/components/ui/button';
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
