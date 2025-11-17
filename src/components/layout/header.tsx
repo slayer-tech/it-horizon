@@ -51,13 +51,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
-        <div className="mr-4 flex items-center md:mr-6">
+        <div className="flex items-center">
           <Sheet>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden"
+                className="md:hidden mr-2"
               >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle Menu</span>
@@ -88,7 +88,7 @@ export function Header() {
               </div>
             </SheetContent>
           </Sheet>
-          <Link href="/" className="mr-6 hidden items-center space-x-2 md:flex">
+          <Link href="/" className="mr-6 flex items-center space-x-2">
             <Layers className="h-6 w-6 text-primary" />
             <span className="hidden font-bold sm:inline-block">
               IT Horizon
@@ -97,7 +97,7 @@ export function Header() {
           <NavLinks className="hidden md:flex" />
         </div>
 
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+        <div className="flex flex-1 items-center justify-end space-x-2">
           <div className="w-full flex-1 md:w-auto md:flex-none">
             <form>
               <div className="relative">
