@@ -85,10 +85,13 @@ export default function HomePage() {
             </SelectContent>
           </Select>
         </div>
-
-        <TabsContent value={topic}>
-          <Posts />
-        </TabsContent>
+        {TOPICS.map(t => (
+          <TabsContent value={t.value} key={t.value}>
+            <Suspense fallback={<PostsSkeleton />}>
+              <PostsList page={1} topic={t.value} sort={sort} />
+            </Suspense>
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );
