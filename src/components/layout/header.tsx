@@ -63,7 +63,7 @@ export function Header() {
                 <span className="sr-only">Toggle Menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="pr-0">
+            <SheetContent side="left" className="px-6">
               <Link href="/" className="mb-6 flex items-center space-x-2">
                 <Layers className="h-6 w-6 text-primary" />
                 <span className="font-bold">
