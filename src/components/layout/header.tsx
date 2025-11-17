@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Layers, Menu, Search, User as UserIcon } from "lucide-react"
+import { Layers, Menu, Search, User as UserIcon, PenSquare } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -14,6 +14,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu"
 import {
   Sheet,
@@ -21,6 +22,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useEffect, useState } from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
 const navLinks = [
   { href: "/", label: "Статьи" },
@@ -45,7 +47,7 @@ function MobileNav() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden mr-2"
+                className="md:hidden"
               >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle Menu</span>
@@ -104,15 +106,15 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center">
-          <MobileNav />
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Layers className="h-6 w-6 text-primary" />
-            <span className="hidden font-bold sm:inline-block">
-              IT Horizon
-            </span>
-          </Link>
-          <NavLinks className="hidden md:flex" />
+        <div className="mr-4 flex items-center md:mr-6">
+            <MobileNav />
+            <Link href="/" className="flex items-center space-x-2">
+                <Layers className="h-6 w-6 text-primary" />
+                <span className="hidden font-bold sm:inline-block">
+                IT Horizon
+                </span>
+            </Link>
+            <NavLinks className="hidden md:flex md:ml-6" />
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-2">
@@ -129,19 +131,50 @@ export function Header() {
             </form>
           </div>
           <div className="flex items-center gap-2">
-            <Button size="sm">Создать</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <UserIcon className="h-5 w-5" />
-                  <span className="sr-only">Профиль пользователя</span>
+                <Button variant="ghost" className="gap-2">
+                   <PenSquare />
+                   <span className="hidden sm:inline">Создать</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Мой аккаунт</DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                    <Link href="/create/post">Статью</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href="/questions/ask">Вопрос</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                      <AvatarImage src="https://images.unsplash.com/photo-1693039537350-3bba6975add7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwZXJzb24lMjBmYWNlfGVufDB8fHx8MTc2MzMxMDAyMHww&ixlib=rb-4.1.0&q=80&w=1080" alt="Алексей Вольнов" />
+                      <AvatarFallback>АВ</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">Алексей Вольнов</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                            alex@example.com
+                        </p>
+                    </div>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Профиль</DropdownMenuItem>
-                <DropdownMenuItem>Настройки</DropdownMenuItem>
+                <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                        <Link href="/profile/me">Профиль</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/settings/profile">Настройки</Link>
+                    </DropdownMenuItem>
+                </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Выйти</DropdownMenuItem>
               </DropdownMenuContent>

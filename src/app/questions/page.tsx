@@ -1,8 +1,7 @@
-
 'use client';
 
 import Link from "next/link";
-import { Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -11,8 +10,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
 import { QuestionsList, QuestionsSkeleton } from "@/components/questions-list";
+import { Suspense } from "react";
+
 
 function Questions() {
     const searchParams = useSearchParams();
@@ -42,7 +42,9 @@ export default function QuestionsPage() {
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           Вопросы
         </h1>
-        <Button>Задать вопрос</Button>
+        <Button asChild>
+          <Link href="/questions/ask">Задать вопрос</Link>
+        </Button>
       </div>
       
       <div className="flex justify-end mb-6">
