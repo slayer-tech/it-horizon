@@ -28,11 +28,24 @@ const TOPICS: { name: string, value: PostTopic | 'all' }[] = [
   { name: 'Карьера', value: 'career' },
 ];
 
+function Posts() {
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get('page') ?? '1');
+  const topic = (searchParams.get('topic') ?? 'all') as PostTopic | 'all';
+  const sort = (searchParams.get('sort') ?? 'newest') as 'newest' | 'popular';
+
+  return (
+    <Suspense fallback={<PostsSkeleton />}>
+      <PostsList page={page} topic={topic} sort={sort} />
+    </Suspense>
+  )
+}
+
+
 export default function HomePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const page = Number(searchParams.get('page') ?? '1');
   const topic = (searchParams.get('topic') ?? 'all') as PostTopic | 'all';
   const sort = (searchParams.get('sort') ?? 'newest') as 'newest' | 'popular';
 
@@ -74,9 +87,7 @@ export default function HomePage() {
         </div>
 
         <TabsContent value={topic}>
-          <Suspense fallback={<PostsSkeleton />}>
-            <PostsList page={page} topic={topic} sort={sort} />
-          </Suspense>
+          <Posts />
         </TabsContent>
       </Tabs>
     </div>
