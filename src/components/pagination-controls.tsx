@@ -1,4 +1,3 @@
-
 "use client"
 
 import Link from 'next/link';
@@ -14,8 +13,6 @@ import {
 } from '@/components/ui/pagination';
 import { cn } from '@/lib/utils';
 import { useMemo } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
 
 export function PaginationControls({
   currentPage,
@@ -74,16 +71,7 @@ export function PaginationControls({
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious
-              asChild
-              aria-disabled={currentPage <= 1}
-              className={currentPage <= 1 ? "pointer-events-none opacity-50" : undefined}
-            >
-              <Link href={createPageURL(currentPage - 1)}>
-                <ChevronLeft className="h-4 w-4" />
-                <span>Previous</span>
-              </Link>
-            </PaginationPrevious>
+             <PaginationPrevious href={createPageURL(currentPage - 1)} aria-disabled={currentPage <= 1} />
           </PaginationItem>
 
           {paginationItems.map((page, index) => (
@@ -91,27 +79,15 @@ export function PaginationControls({
               {page === '...' ? (
                 <PaginationEllipsis />
               ) : (
-                <PaginationLink
-                  asChild
-                  isActive={currentPage === page}
-                >
-                  <Link href={createPageURL(page as number)}>{page}</Link>
-                </PaginationLink>
+                <Link href={createPageURL(page as number)} passHref legacyBehavior>
+                  <PaginationLink isActive={currentPage === page}>{page}</PaginationLink>
+                </Link>
               )}
             </PaginationItem>
           ))}
 
           <PaginationItem>
-            <PaginationNext
-              asChild
-              aria-disabled={currentPage >= totalPages}
-               className={currentPage >= totalPages ? "pointer-events-none opacity-50" : undefined}
-            >
-              <Link href={createPageURL(currentPage + 1)}>
-                <span>Next</span>
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </PaginationNext>
+            <PaginationNext href={createPageURL(currentPage + 1)} aria-disabled={currentPage >= totalPages} />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
