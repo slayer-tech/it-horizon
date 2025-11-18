@@ -21,7 +21,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 
 const navLinks = [
@@ -75,7 +75,7 @@ function MobileNav() {
 }
 
 
-function ClientHeader() {
+export function Header() {
     const pathname = usePathname()
 
   const NavLinks = ({ className }: { className?: string }) => (
@@ -181,19 +181,4 @@ function ClientHeader() {
       </div>
     </header>
   )
-}
-
-export function Header() {
-    const [isClient, setIsClient] = useState(false)
-
-    useEffect(() => {
-        setIsClient(true)
-    }, [])
-
-    // Render a placeholder on the server and the full header on the client to avoid hydration errors
-    return isClient ? <ClientHeader /> : (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8" />
-        </header>
-    );
 }

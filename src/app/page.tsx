@@ -41,7 +41,7 @@ function Posts() {
 }
 
 
-export default function HomePage({ children }: { children: React.ReactNode }) {
+export default function HomePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -91,7 +91,7 @@ export default function HomePage({ children }: { children: React.ReactNode }) {
         </ScrollArea>
         {TOPICS.map(t => (
           <TabsContent value={t.value} key={t.value}>
-            {children}
+            <Posts />
           </TabsContent>
         ))}
       </Tabs>

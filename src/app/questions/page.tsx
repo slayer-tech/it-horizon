@@ -13,11 +13,22 @@ import { Button } from "@/components/ui/button";
 import { QuestionsList, QuestionsSkeleton } from "@/components/questions-list";
 import { Suspense } from "react";
 
+function Questions() {
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get('page') ?? '1');
+  const sort = (searchParams.get('sort') ?? 'newest') as 'newest' | 'popular';
+
+  return (
+    <Suspense fallback={<QuestionsSkeleton />}>
+      <QuestionsList page={page} sort={sort} />
+    </Suspense>
+  );
+}
+
 export default function QuestionsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const page = Number(searchParams.get('page') ?? '1');
+  
   const sort = (searchParams.get('sort') ?? 'newest') as 'newest' | 'popular';
   
   const handleSortChange = (value: string) => {
@@ -47,9 +58,7 @@ export default function QuestionsPage() {
         </Select>
       </div>
 
-      <Suspense fallback={<QuestionsSkeleton />}>
-        <QuestionsList page={page} sort={sort} />
-      </Suspense>
+      <Questions />
     </div>
   );
 }
