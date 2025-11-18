@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { PlaceHolderImages } from './placeholder-images';
 
@@ -397,11 +398,18 @@ return <h1>{user.name}</h1>;`}
 // Data fetching functions
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export async function getPosts(params: { page?: number; limit?: number; topic?: PostTopic | 'all', sort?: 'newest' | 'popular' }): Promise<{ posts: Post[]; totalPages: number }> {
-  // await sleep(500); // Simulate network delay
-  const { page = 1, limit = 9, topic = 'all', sort = 'newest' } = params;
+export async function getPosts(params: { page?: number; limit?: number; topic?: PostTopic | 'all', sort?: 'newest' | 'popular', authorId?: string }): Promise<{ posts: Post[]; totalPages: number }> {
+  const { page = 1, limit = 9, topic = 'all', sort = 'newest', authorId } = params;
 
-  let filteredPosts = topic === 'all' ? posts : posts.filter(p => p.topic === topic);
+  let filteredPosts = posts;
+
+  if (authorId) {
+    filteredPosts = filteredPosts.filter(p => p.author.id === authorId);
+  }
+
+  if (topic !== 'all') {
+    filteredPosts = filteredPosts.filter(p => p.topic === topic);
+  }
 
   if (sort === 'newest') {
     filteredPosts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -416,15 +424,17 @@ export async function getPosts(params: { page?: number; limit?: number; topic?: 
 }
 
 export async function getPostById(id: string): Promise<Post | undefined> {
-  // await sleep(300);
   return posts.find(p => p.id === id);
 }
 
-export async function getQuestions(params: { page?: number; limit?: number; sort?: 'newest' | 'popular' }): Promise<{ questions: Question[]; totalPages: number }> {
-  // await sleep(500);
-  const { page = 1, limit = 10, sort = 'newest' } = params;
+export async function getQuestions(params: { page?: number; limit?: number; sort?: 'newest' | 'popular', authorId?: string }): Promise<{ questions: Question[]; totalPages: number }> {
+  const { page = 1, limit = 10, sort = 'newest', authorId } = params;
 
   let sortedQuestions = [...questions];
+
+  if (authorId) {
+    sortedQuestions = sortedQuestions.filter(q => q.author.id === authorId);
+  }
 
   if (sort === 'newest') {
     sortedQuestions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -439,12 +449,10 @@ export async function getQuestions(params: { page?: number; limit?: number; sort
 }
 
 export async function getQuestionById(id: string): Promise<Question | undefined> {
-  // await sleep(300);
   return questions.find(q => q.id === id);
 }
 
 export async function getAnswersByQuestionId(questionId: string): Promise<Answer[]> {
-  // await sleep(300);
   return answers.filter(a => a.questionId === questionId).sort((a,b) => b.votes - a.votes);
 }
 

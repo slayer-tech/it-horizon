@@ -1,21 +1,19 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { posts, questions, users } from '@/lib/data.tsx';
+import { getPosts, getQuestions, users } from '@/lib/data.tsx';
 import { PostCard } from '@/components/post-card';
 import { QuestionCard } from '@/components/question-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
   const user = users[0]; // Assuming current user is the first user
-  const userPosts = posts.filter((p) => p.author.id === user.id);
-  const userQuestions = questions.filter((q) => q.author.id === user.id);
+  const { posts: userPosts } = await getPosts({ authorId: user.id });
+  const { questions: userQuestions } = await getQuestions({ authorId: user.id });
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
