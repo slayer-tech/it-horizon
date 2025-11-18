@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -42,7 +41,7 @@ function Posts() {
 }
 
 
-export default function HomePage() {
+export default function HomePage({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -50,21 +49,37 @@ export default function HomePage() {
   const sort = (searchParams.get('sort') ?? 'newest') as 'newest' | 'popular';
 
   const handleSortChange = (value: string) => {
-    router.push(`/?topic=${topic}&sort=${value}`);
+    const params = new URLSearchParams(searchParams);
+    params.set('sort', value);
+    router.push(`?${params.toString()}`);
   };
 
   const handleTopicChange = (value: string) => {
-    router.push(`/?topic=${value}&sort=${sort}`);
+    const params = new URLSearchParams(searchParams);
+    params.set('topic', value);
+    params.set('page', '1');
+    router.push(`?${params.toString()}`);
   };
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-8">
-        Статьи
-      </h1>
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          Статьи
+        </h1>
+        <Select value={sort} onValueChange={handleSortChange}>
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Сортировка" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Сначала новые</SelectItem>
+            <SelectItem value="popular">Сначала популярные</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <Tabs value={topic} onValueChange={handleTopicChange} className="w-full">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-          <ScrollArea className="w-full sm:w-auto">
+        <ScrollArea className="w-full sm:w-auto mb-6">
             <TabsList>
               {TOPICS.map((t) => (
                 <TabsTrigger value={t.value} key={t.value}>
@@ -73,23 +88,10 @@ export default function HomePage() {
               ))}
             </TabsList>
             <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-
-          <Select value={sort} onValueChange={handleSortChange}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="Сортировка" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">Сначала новые</SelectItem>
-              <SelectItem value="popular">Сначала популярные</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        </ScrollArea>
         {TOPICS.map(t => (
           <TabsContent value={t.value} key={t.value}>
-            <Suspense fallback={<PostsSkeleton />}>
-              <PostsList page={1} topic={t.value} sort={sort} />
-            </Suspense>
+            {children}
           </TabsContent>
         ))}
       </Tabs>

@@ -31,18 +31,10 @@ const navLinks = [
 
 function MobileNav() {
     const pathname = usePathname();
-    const [isClient, setIsClient] = useState(false)
-
-    useEffect(() => {
-        setIsClient(true)
-    }, [])
-
-    if (!isClient) {
-        return null;
-    }
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <Sheet>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
@@ -54,7 +46,7 @@ function MobileNav() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="px-6 pt-6">
-              <Link href="/" className="mb-6 flex items-center space-x-2">
+              <Link href="/" className="mb-6 flex items-center space-x-2" onClick={() => setIsOpen(false)}>
                 <Layers className="h-6 w-6 text-primary" />
                 <span className="font-bold">
                   IT Horizon
@@ -65,6 +57,7 @@ function MobileNav() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    onClick={() => setIsOpen(false)}
                     className={cn(
                       "text-lg font-medium transition-colors hover:text-primary",
                       pathname.startsWith(link.href) && (link.href !== '/' || pathname === '/')
@@ -81,8 +74,9 @@ function MobileNav() {
     )
 }
 
-export function Header() {
-  const pathname = usePathname()
+
+function ClientHeader() {
+    const pathname = usePathname()
 
   const NavLinks = ({ className }: { className?: string }) => (
     <nav className={cn("items-center space-x-4 lg:space-x-6", className)}>
@@ -108,7 +102,7 @@ export function Header() {
       <div className="container flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
         <div className="mr-4 flex items-center md:mr-6">
             <MobileNav />
-            <Link href="/" className="flex items-center space-x-2">
+            <Link href="/" className="hidden items-center space-x-2 sm:flex">
                 <Layers className="h-6 w-6 text-primary" />
                 <span className="hidden font-bold sm:inline-block">
                 IT Horizon
@@ -184,4 +178,18 @@ export function Header() {
       </div>
     </header>
   )
+}
+
+export function Header() {
+    const [isClient, setIsClient] = useState(false)
+
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
+
+    return isClient ? <ClientHeader /> : (
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8" />
+        </header>
+    );
 }
