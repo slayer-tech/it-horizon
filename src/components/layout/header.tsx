@@ -99,8 +99,8 @@ function ClientHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
-        <div className="mr-4 flex items-center md:mr-6">
+      <div className="container flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center">
             <MobileNav />
             <Link href="/" className="hidden items-center space-x-2 sm:flex">
                 <Layers className="h-6 w-6 text-primary" />
@@ -108,10 +108,13 @@ function ClientHeader() {
                 IT Horizon
                 </span>
             </Link>
-            <NavLinks className="hidden md:flex md:ml-6" />
         </div>
 
-        <div className="flex flex-1 items-center justify-end space-x-2">
+        <div className="hidden md:flex justify-center">
+            <NavLinks />
+        </div>
+
+        <div className="flex items-center justify-end space-x-2">
           <div className="w-full flex-1 md:w-auto md:flex-none">
             <form>
               <div className="relative">
@@ -187,6 +190,7 @@ export function Header() {
         setIsClient(true)
     }, [])
 
+    // Render a placeholder on the server and the full header on the client to avoid hydration errors
     return isClient ? <ClientHeader /> : (
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8" />
