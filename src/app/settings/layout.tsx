@@ -1,34 +1,58 @@
-'use client'
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import { usePathname, useRouter } from 'next/navigation';
+import ProfileSettingsPage from './profile/page';
+import AccountSettingsPage from './account/page';
+import AppearanceSettingsPage from './appearance/page';
+import NotificationsSettingsPage from './notifications/page';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
-const sidebarNavItems = [
+const settingsTabs = [
   {
-    title: "Профиль",
-    href: "/settings/profile",
+    title: 'Профиль',
+    value: 'profile',
+    href: '/settings/profile',
+    component: <ProfileSettingsPage />,
   },
   {
-    title: "Аккаунт",
-    href: "/settings/account",
+    title: 'Аккаунт',
+    value: 'account',
+    href: '/settings/account',
+    component: <AccountSettingsPage />,
   },
   {
-    title: "Внешний вид",
-    href: "/settings/appearance",
+    title: 'Внешний вид',
+    value: 'appearance',
+    href: '/settings/appearance',
+    component: <AppearanceSettingsPage />,
   },
   {
-    title: "Уведомления",
-    href: "/settings/notifications",
+    title: 'Уведомления',
+    value: 'notifications',
+    href: '/settings/notifications',
+    component: <NotificationsSettingsPage />,
   },
 ];
 
-interface SettingsLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function SettingsLayout({ children }: SettingsLayoutProps) {
+export default function SettingsLayout() {
   const pathname = usePathname();
+  const router = useRouter();
+  const activeTab =
+    settingsTabs.find((tab) => pathname.includes(tab.value))?.value ||
+    'profile';
+
+  const onTabChange = (value: string) => {
+    const href = settingsTabs.find((tab) => tab.value === value)?.href;
+    if (href) {
+      router.push(href);
+    }
+  };
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -41,28 +65,37 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
             Управляйте настройками своего аккаунта и сайта.
           </p>
         </div>
-        <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-          <aside className="-mx-4 lg:w-1/5">
-            <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1">
-              {sidebarNavItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground h-9 px-4 py-2",
-                    pathname === item.href
-                      ? "bg-muted hover:bg-muted"
-                      : "hover:bg-transparent hover:underline",
-                    "justify-start"
-                  )}
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </nav>
-          </aside>
-          <div className="flex-1 lg:max-w-4xl">{children}</div>
-        </div>
+
+        <Tabs
+          value={activeTab}
+          onValueChange={onTabChange}
+          className="flex flex-col gap-8 md:flex-row"
+        >
+          <div className="w-full md:w-1/5">
+            <ScrollArea className="w-full">
+              <TabsList className="flex h-full w-full flex-row items-start justify-start p-1 md:flex-col md:bg-transparent">
+                {settingsTabs.map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className="w-full justify-start data-[state=active]:bg-muted data-[state=active]:shadow-none md:bg-transparent md:data-[state=active]:bg-muted"
+                  >
+                    {tab.title}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              <ScrollBar orientation="horizontal" className="md:hidden" />
+            </ScrollArea>
+          </div>
+
+          <div className="flex-1 lg:max-w-4xl">
+            {settingsTabs.map((tab) => (
+              <TabsContent key={tab.value} value={tab.value}>
+                {tab.component}
+              </TabsContent>
+            ))}
+          </div>
+        </Tabs>
       </div>
     </div>
   );
